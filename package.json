@@ -35,6 +35,6 @@
     "typescript": "^3.9.5"
   },
   "dependencies": {
-    "tuft": "^1.0.0-alpha.15"
+    "tuft": "^1.0.0-alpha.19"
   }
 }

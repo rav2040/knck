@@ -23,7 +23,7 @@
     "node_modules/",
     "lib/",
     "coverage/",
-    "example/"
+    "src/assets/"
   ],
   "rules": {
     "no-unused-vars": "off",
