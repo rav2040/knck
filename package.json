@@ -1,5 +1,5 @@
 {
-  "name": "url-shortener",
+  "name": "knck",
   "version": "0.1.0",
   "description": "knck - a URL-shortening microservice.",
   "author": "Stuart Kennedy",
