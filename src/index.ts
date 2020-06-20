@@ -40,7 +40,7 @@ void async function() {
     preHandlers: [createSearchParams()],
   });
 
-  await app.static('/', join(__dirname, 'assets'));
+  await app.static('/', join(__dirname, '../assets'));
 
   app.set('POST /new', async ({ request }) => {
     const originalUrl = request.searchParams.get('url');
