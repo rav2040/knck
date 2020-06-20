@@ -1,16 +1,16 @@
 {
   "name": "url-shortener",
   "version": "0.1.0",
-  "description": "A URL-shortening microservice.",
+  "description": "knck - a URL-shortening microservice.",
   "author": "Stuart Kennedy",
   "license": "MIT",
-  "homepage": "https://github.com/rav2040/url-shortener",
+  "homepage": "https://github.com/rav2040/knck",
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/rav2040/url-shortener.git"
+    "url": "git+https://github.com/rav2040/knck.git"
   },
   "bugs": {
-    "url": "https://github.com/rav2040/url-shortener/issues"
+    "url": "https://github.com/rav2040/knck/issues"
   },
   "keywords": [
     "url",
