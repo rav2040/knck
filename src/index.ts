@@ -21,24 +21,14 @@ if (!process.env.PORT) {
 
 const port = parseInt(process.env.PORT, 10);
 
-let key, cert;
-
-try {
-  key = readFileSync('key.pem');
-  cert = readFileSync('cert.pem');
-}
-
-catch (err) {
-  console.error(err);
-  process.exit(1);
-}
-
 const urls = new Map();
 
-void async function() {
+async function main() {
   const app = tuft({
     preHandlers: [createSearchParams()],
   });
+
+  app.onError(console.error);
 
   await app.static('/', join(__dirname, '../assets'));
 
@@ -81,9 +71,29 @@ void async function() {
     return !redirect ? { error: 'NOT_FOUND' } : { redirect };
   });
 
-  app.onError(console.error);
+  if (process.env.PRODUCTION) {
+    const server = app.createServer({ port });
+    await server.start();
+    console.log(`Server is listening at http://${server.host}:${server.port}`);
+  }
 
-  const server = app.createSecureServer({ port, key, cert });
-  await server.start();
-  console.log(`Server is listening at https://${server.host}:${server.port}`);
-}();
+  else {
+    let key, cert;
+
+    try {
+      key = readFileSync(join(__dirname, 'key.pem'));
+      cert = readFileSync(join(__dirname, 'cert.pem'));
+    }
+
+    catch (err) {
+      console.error(err);
+      process.exit(1);
+    }
+
+    const server = app.createSecureServer({ port, key, cert });
+    await server.start();
+    console.log(`Server is listening at https://${server.host}:${server.port}`);
+  }
+}
+
+main();
