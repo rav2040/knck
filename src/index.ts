@@ -71,7 +71,7 @@ async function main() {
     return !redirect ? { error: 'NOT_FOUND' } : { redirect };
   });
 
-  if (process.env.PRODUCTION) {
+  if (process.env.PRODUCTION === 'true') {
     const server = app.createServer({ port });
     await server.start();
     console.log(`Server is listening at http://${server.host}:${server.port}`);

@@ -1,3 +1,5 @@
+const BASE_URI = 'https://knck.xyz';
+
 document
   .getElementById('form')
   .addEventListener('submit', async event => {
@@ -12,7 +14,7 @@ document
   });
 
 async function postData(url) {
-  const response = await fetch(`https://localhost:3000/new?url=${url}`, {
+  const response = await fetch(`${BASE_URI}/new?url=${url}`, {
     method: 'POST',
     mode: 'same-origin',
     cache: 'no-cache',
