@@ -5,7 +5,7 @@ document
   .addEventListener('submit', async event => {
     event.preventDefault();
     const { value } = document.getElementById('url');
-    const { shortUrl } = await postData(value);;
+    const { shortUrl } = await postData(value);
     const resultLink = document.getElementById('result-link');
     resultLink.setAttribute('href', shortUrl);
     resultLink.innerHTML = shortUrl.replace(/^https?:\/\//, '');
