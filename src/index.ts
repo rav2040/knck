@@ -13,13 +13,19 @@ const {
 
 const randomBytesAsync = promisify(randomBytes);
 
-if (!process.env.PORT) {
+if (process.env.PORT === undefined) {
   const err = new Error('\'PORT\' environment variable must be set.');
   console.error(err);
   process.exit(1);
 }
 
 const port = parseInt(process.env.PORT, 10);
+
+if (!Number.isInteger(port)) {
+  const err = new Error('\'PORT\' environment variable must be an integer.');
+  console.error(err);
+  process.exit(1);
+}
 
 const urls = new Map();
 
@@ -68,7 +74,11 @@ async function main() {
   app.set('GET /{hash}', ({ request }) => {
     const { hash } = request.params;
     const redirect = urls.get(hash);
-    return !redirect ? { error: 'NOT_FOUND' } : { redirect };
+    return redirect ? { redirect } : { error: 'NOT_FOUND' };
+  });
+
+  app.set('/{**}', () => {
+    return { error: 'NOT_FOUND' };
   });
 
   if (process.env.PRODUCTION === 'true') {
@@ -78,7 +88,8 @@ async function main() {
   }
 
   else {
-    let key, cert;
+    let key: Buffer;
+    let cert: Buffer;
 
     try {
       key = readFileSync(join(__dirname, 'key.pem'));
