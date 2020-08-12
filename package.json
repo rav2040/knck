@@ -17,7 +17,7 @@
   "scripts": {
     "build": "rm -rf ./lib && tsc -b",
     "dev-start": "nodemon -w ./src/index.ts -e ts-node -r dotenv/config ./src/index.ts",
-    "start": "pm2 restart ecosystem.config.yml --env production ./app/index.js"
+    "start": "pm2 restart ecosystem.config.yml --env production"
   },
   "devDependencies": {
     "@types/node": "^14.0.27",
