@@ -81,7 +81,7 @@ async function main() {
     return { error: 'NOT_FOUND' };
   });
 
-  if (process.env.PRODUCTION === 'true') {
+  if (process.env.NODE_ENV === 'production') {
     const server = app.createServer({ port });
     await server.start();
     console.log(`Server is listening at http://${server.host}:${server.port}`);
