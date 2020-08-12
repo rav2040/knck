@@ -1,7 +1,7 @@
 {
   "name": "knck",
-  "version": "0.1.0",
-  "description": "knck - a URL-shortening microservice.",
+  "version": "1.0.0",
+  "description": "knck - URL-shortening service",
   "private": true,
   "author": "Stuart Kennedy",
   "license": "MIT",
@@ -13,17 +13,11 @@
   "bugs": {
     "url": "https://github.com/rav2040/knck/issues"
   },
-  "keywords": [
-    "knck",
-    "url",
-    "short",
-    "shortener"
-  ],
   "main": "app/index.js",
   "scripts": {
     "build": "rm -rf ./lib && tsc -b",
     "dev-start": "nodemon -w ./src/index.ts -e ts-node -r dotenv/config ./src/index.ts",
-    "start": "node -r dotenv/config ./app/index.js"
+    "start": "pm2 restart ecosystem.config.yml --env production ./app/index.js"
   },
   "devDependencies": {
     "@types/node": "^14.0.27",
@@ -34,6 +28,9 @@
     "nodemon": "^2.0.4",
     "ts-node": "^8.10.2",
     "typescript": "^3.9.7"
+  },
+  "peerDependencies": {
+    "pm2": "^4.4.0"
   },
   "dependencies": {
     "tuft": "^1.0.0-alpha.20"
