@@ -1,15 +1,9 @@
 import { tuft, createSearchParams } from 'tuft';
+import { MongoClient } from 'mongodb';
 import { randomBytes } from 'crypto';
 import { promisify } from 'util';
 import { join } from 'path';
 import { URL } from 'url';
-import { readFileSync } from 'fs';
-import { constants } from 'http2';
-
-const {
-  HTTP2_HEADER_SCHEME,
-  HTTP2_HEADER_AUTHORITY,
-} = constants;
 
 const randomBytesAsync = promisify(randomBytes);
 
@@ -19,17 +13,51 @@ if (process.env.PORT === undefined) {
   process.exit(1);
 }
 
-const port = parseInt(process.env.PORT, 10);
+const PORT = parseInt(process.env.PORT, 10);
 
-if (!Number.isInteger(port)) {
+if (!Number.isInteger(PORT)) {
   const err = new Error('\'PORT\' environment variable must be an integer.');
   console.error(err);
   process.exit(1);
 }
 
-const urls = new Map();
+const baseUriPrefix = process.env.NODE_ENV === 'production' ? 'https://' : 'http://';
+
+if (process.env.DB_URI === undefined) {
+  const err = new Error('\'DB_URI\' environment variable must be set.');
+  console.error(err);
+  process.exit(1);
+}
+
+const DB_URI = process.env.DB_URI;
+
+const badRequestResponse = {
+  status: 400,
+  text: 'Bad Request',
+};
+
+const notFoundResponse = {
+  status: 404,
+  text: 'Not Found',
+};
+
+const serverErrorResponse = {
+  status: 500,
+  text: 'Internal Server Error',
+};
 
 async function main() {
+  const dbClient = new MongoClient(DB_URI, {
+    useNewUrlParser: true,
+    useUnifiedTopology: true,
+  });
+
+  await dbClient.connect();
+
+  process.on('exit', () => {
+    dbClient.close();
+  });
+
   const app = tuft({
     preHandlers: [createSearchParams()],
   });
@@ -38,73 +66,87 @@ async function main() {
 
   await app.static('/', join(__dirname, '../assets'));
 
-  app.set('POST /new', async ({ request }) => {
-    const originalUrl = request.searchParams.get('url');
-
-    if (!originalUrl) {
-      return { error: 'BAD_REQUEST' };
-    }
+  app.set('POST /new', async t => {
+    const originalUrl = t.request.searchParams.get('url');
 
     try {
       new URL(originalUrl);
     } catch (err) {
-      return { error: 'BAD_REQUEST' };
+      return badRequestResponse;
     }
 
-    let hash: string;
-
-    do {
-      hash = (await randomBytesAsync(4))
-        .toString('base64')
-        .slice(0, 6)
-        .replace(/[+/]/g, 'a');
-    } while (urls.has(hash));
-
-    urls.set(hash, originalUrl);
-
-    const scheme = request.headers[HTTP2_HEADER_SCHEME];
-    const authority = request.headers[HTTP2_HEADER_AUTHORITY];
-    const shortUrl = scheme + '://' + authority + '/' + hash;
-
-    return {
-      json: { originalUrl, shortUrl },
-    };
-  });
-
-  app.set('GET /{hash}', ({ request }) => {
-    const { hash } = request.params;
-    const redirect = urls.get(hash);
-    return redirect ? { redirect } : { error: 'NOT_FOUND' };
-  });
-
-  app.set('/{**}', () => {
-    return { error: 'NOT_FOUND' };
-  });
-
-  if (process.env.NODE_ENV === 'production') {
-    const server = app.createServer({ port });
-    await server.start();
-    console.log(`Server is listening at http://${server.host}:${server.port}`);
-  }
-
-  else {
-    let key: Buffer;
-    let cert: Buffer;
-
     try {
-      key = readFileSync(join(__dirname, 'key.pem'));
-      cert = readFileSync(join(__dirname, 'cert.pem'));
+      const collection = dbClient
+        .db('knck-dev')
+        .collection('shortUrls');
+
+      let hash: string;
+
+      do {
+        hash = (await randomBytesAsync(4))
+          .toString('base64')
+          .slice(0, 6)
+          .replace(/[+/]/g, 'a');
+      } while (await collection.findOne({ hash }));
+
+      const shortUrlDocument = {
+        hash,
+        url: originalUrl,
+        timestamp: new Date(),
+      };
+
+      const result = await collection.insertOne(shortUrlDocument);
+
+      if (result.insertedCount !== 1) {
+        return serverErrorResponse;
+      }
+
+      const shortUrl = baseUriPrefix + t.request.headers.host + '/' + hash;
+
+      return {
+        json: {
+          originalUrl,
+          shortUrl,
+        },
+      };
     }
 
     catch (err) {
       console.error(err);
-      process.exit(1);
+      return serverErrorResponse;
+    }
+  });
+
+  app.set('GET /{hash}', async ({ request }) => {
+    const { hash } = request.params;
+
+    try {
+      const collection = dbClient
+        .db('knck-dev')
+        .collection('shortUrls');
+
+      const result = await collection.findOne({ hash });
+
+      if (!result) {
+        return notFoundResponse;
+      }
+
+      return {
+        redirect: result.url,
+      };
     }
 
-    const server = app.createSecureServer({ port, key, cert });
-    await server.start();
-    console.log(`Server is listening at https://${server.host}:${server.port}`);
-  }
+    catch (err) {
+      console.error(err);
+      return serverErrorResponse;
+    }
+  });
+
+  app.set('/{**}', notFoundResponse);
+
+  const server = app.createServer({ port: PORT });
+  const { host, port } = await server.start();
+  console.log(`Server is listening at http://${host}:${port}`);
 }
 
 main();
