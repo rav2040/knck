@@ -26,3 +26,7 @@ body {
   font-family: 'Fira Mono', monospace;
   color: #333;
 }
+
+.text-faded {
+  color: #bbb;
+}
