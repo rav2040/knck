@@ -30,6 +30,7 @@ if (process.env.DB_URI === undefined) {
 }
 
 const DB_URI = process.env.DB_URI;
+const DB_NAME = process.env.DB_NAME;
 
 const badRequestResponse = {
   status: 400,
@@ -77,7 +78,7 @@ async function main() {
 
     try {
       const collection = dbClient
-        .db('knck-dev')
+        .db(DB_NAME)
         .collection('shortUrls');
 
       let hash: string;
@@ -122,7 +123,7 @@ async function main() {
 
     try {
       const collection = dbClient
-        .db('knck-dev')
+        .db(DB_NAME)
         .collection('shortUrls');
 
       const result = await collection.findOne({ hash });
