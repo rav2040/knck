@@ -1,0 +1,42 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png">
+    <link rel="icon" type="image/png" sizes="32x32" href="/favicon-32x32.png">
+    <link rel="icon" type="image/png" sizes="16x16" href="/favicon-16x16.png">
+    <link rel="manifest" href="/site.webmanifest">
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.0/css/bootstrap.min.css" integrity="sha384-9aIt2nRpC12Uk9gS9baDl411NQApFmC26EwAOH8WgZl5MYYxFfc+NcPb1dKGj7Sk" crossorigin="anonymous">
+    <link rel="stylesheet" href="css/styles.css">
+    <title>knck - URL Shortener</title>
+  </head>
+  <body>
+    <main role="main" class="inner cover text-center">
+      <div id="main-container" class="position-relative">
+        <h1 id="title">knck</h1>
+        <br>
+        <h5 class="text-muted">URL too long? Kn<span class="text-faded">o</span>ck it down to size!</h5>
+        <form id="form" class="pt-3">
+          <div class="form-group col-md-4 mx-auto">
+            <input type="url" class="form-control" id="url" placeholder="Enter a URL" name="url">
+          </div>
+          <button type="submit" class="btn btn-primary">Submit</button>
+        </form>
+        <div id="result-container" class="pt-5 invisible">
+          <p>Your new short URL is</p>
+          <h4><a id="result-link" target="_blank"></a></h4>
+          <br>
+          <p>Short URLS expire automatically after 30 days.</p>
+        </div>
+      </div>
+    </main>
+    <footer class="mastfoot mt-auto">
+      <div class="inner text-center text-muted">
+        <p>Copyright &copy; 2020 Stuart Kennedy. Powered by <a href="https://tuft.dev" target="_blank">Tuft</a>.</p>
+        <br>
+      </div>
+    </footer>
+    <script src="scripts/index.js"></script>
+  </body>
+</html>
