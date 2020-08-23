@@ -11,6 +11,12 @@ if (process.env.NODE_ENV !== 'development' && process.env.NODE_ENV !== 'producti
   process.exit(1);
 }
 
+if (process.env.HOST === undefined) {
+  const err = new Error('\'HOST\' environment variable must be set.');
+  console.error(err);
+  process.exit(1);
+}
+
 if (process.env.PORT === undefined) {
   const err = new Error('\'PORT\' environment variable must be set.');
   console.error(err);
@@ -37,7 +43,10 @@ async function init() {
     .set('/{**}', notFoundResponse)
     .onError(console.error);
 
-  const server = app.createServer({ port: process.env.PORT });
+  const server = app.createServer({
+    host: process.env.HOST,
+    port: process.env.PORT,
+  });
   const { host, port } = await server.start();
   console.log(`Server is listening at http://${host}:${port}`);
 }
