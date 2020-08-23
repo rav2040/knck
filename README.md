@@ -1,2 +1,2 @@
-# url-shortener
-A URL shortener microservice.
+# Knck.xyz
+A URL shortening servce.
