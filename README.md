@@ -46,6 +46,8 @@ Returns a JSON object with the following properties:
 
 If `hash` matches a valid database entry, the server will respond with a `302 Found` status code, and redirect the client to the corresponding URL.
 
+If the provided hash is invalid (not 6 characters in length), the server will respond with `400 Bad Request`. If the provided hash is valid, but there is no matching database entry, the server will respond with `404 Not Found`.
+
 ## People
 
 The creator of Knck is [Stuart Kennedy](https://github.com/rav2040).
