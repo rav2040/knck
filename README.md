@@ -39,7 +39,7 @@ Creates a new database entry for the provided `url`. E.g. `/new?url=https://www.
 
 Returns a JSON object with the following properties:
 
-* `originalURL` - the URL provided in the POST request.
+* `originalUrl` - the URL provided in the POST request.
 * `shortUrl` - the short URL that can be used to access the `originalUrl`.
 
 ### GET /{hash}
