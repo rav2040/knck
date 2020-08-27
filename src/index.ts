@@ -1,4 +1,5 @@
 import { tuft, createSearchParams } from 'tuft';
+import { createHelmetPrehandler } from '@tuft/helmet-prehandler';
 import { join } from 'path';
 import { createDbInstance } from './db';
 import { createShortUrl } from './controllers/create';
@@ -31,7 +32,14 @@ async function init() {
   const db = await createDbInstance();
 
   const app = tuft({
-    preHandlers: [createSearchParams()],
+    preHandlers: [
+      createSearchParams(),
+      createHelmetPrehandler({
+        hidePoweredBy: false,
+        ieNoOpen: false,
+        frameguard: false,
+      }),
+    ],
   });
 
   // Serve static web assets from the root path.
