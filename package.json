@@ -1,7 +1,7 @@
 {
   "name": "knck",
-  "version": "1.2.0",
-  "description": "knck - URL-shortening service",
+  "version": "2.0.0",
+  "description": "knck - a URL-shortening service",
   "private": true,
   "author": "Stuart Kennedy",
   "license": "MIT",
@@ -18,13 +18,13 @@
     "test": "jest",
     "test:coverage": "jest --coverage",
     "build": "rm -rf ./app && tsc -b",
-    "dev-start": "nodemon -w ./src/index.ts -e ts-node -r dotenv/config ./src/index.ts",
-    "start": "pm2 restart ecosystem.config.yml --env production"
+    "start": "npm run build && pm2 restart ecosystem.config.yml",
+    "start:dev": "nodemon -w ./src/index.ts -e ts-node -r dotenv/config ./src/index.ts"
   },
   "devDependencies": {
     "@types/jest": "^26.0.10",
     "@types/mongodb": "^3.5.26",
-    "@types/node": "^14.6.0",
+    "@types/node": "^14.6.1",
     "@typescript-eslint/eslint-plugin": "^3.10.1",
     "@typescript-eslint/parser": "^3.10.1",
     "dotenv": "^8.2.0",
@@ -40,6 +40,7 @@
   },
   "dependencies": {
     "@tuft/helmet-prehandler": "^1.0.0",
+    "@tuft/view-responder": "^1.0.1",
     "mongodb": "^3.6.0",
     "tuft": "^2.0.0-beta.6"
   }
