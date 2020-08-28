@@ -1,8 +1,20 @@
 # Knck - URL shortening service
 
-Website: https://knck.xyz
+Example website: https://knck.xyz
 
 Knck (pronounced *knock*) is a simple URL shortening service utilizing [Tuft](https://www.tuft.dev) (Node.js) and written in TypeScript.
+
+## Prerequisities
+
+Knck requires [pm2](https://pm2.io/) to be installed as a peer dependency. It also requires access to a MongoDB database.
+
+You should also have the following environment variables set:
+
+* `NODE_ENV` - `'developmenmt'` or `'production'`.
+* `HOST` - The server host address.
+* `PORT` - The server host port.
+* `DB_URI` - The connection string for a MongoDB database.
+* `DB_NAME` - The name of the MongoDB database to use.
 
 ## Building locally
 
@@ -13,40 +25,45 @@ To build Knck after cloning to your machine, execute the following commands:
   $ npm run build
 ```
 
-Knck requires access to a MongoDB database, accessed via the `DB_URI` environment variable.
+## Deploying
 
-To start a server in development mode, run:
+First, the `DB_URI` environment variable should be set in `ecosystem.config.yml`, and pm2 should be installed. Other settings like host and port can be changed as well.
 
-```sh
-  $ npm run dev-start
-```
-
-To start a server in production mode, run:
+The server can then be started by executing:
 
 ```sh
   $ npm start
 ```
 
-The application will then serve static website content on the root path `'/'`, providing a user-friendly way to interact with the API.
+Alternatively, to start a server in development mode, execute:
 
-## API
+```sh
+  $ npm run start:dev
+```
 
-Knck provides the following two API endpoints:
+This requires that environment variables be set in a `.env` file in the project root.
 
-### POST /new?url={url}
+## Usage
 
-Creates a new database entry for the provided `url`. E.g. `/new?url=https://www.example.com`.
+Knck provides the following endpoints:
 
-Returns a JSON object with the following properties:
+### GET /
 
-* `originalUrl` - the URL provided in the POST request.
-* `shortUrl` - the short URL that can be used to access the `originalUrl`.
+Displays a webpage with a text box for the user to input an original URL. Submitting the URL will then call the POST endpoint below.
+
+### POST /
+
+An original URL should be submitted under the key `url` in an `'x-www-form-urlencoded'` request body (limited to 2KB). A new webpage will then be displayed containing the new, shorter URL.
+
+If the request body is not received in the expected format, the server will respond with `400 Bad Request`.
 
 ### GET /{hash}
 
-If `hash` matches a valid database entry, the server will respond with a `302 Found` status code, and redirect the client to the corresponding URL.
+If the string `hash` is valid, and matches a database entry, the server will respond with `302 Found`, and redirect the client to the corresponding URL.
 
-If the provided hash is invalid (not 6 characters in length), the server will respond with `400 Bad Request`. If the provided hash is valid, but there is no matching database entry, the server will respond with `404 Not Found`.
+If `hash` is valid, but does not match a database entry, the server will respond with `404 Not Found`.
+
+If `hash` is invalid (not 6 characters in length), the server will respond with `400 Bad Request`.
 
 ## People
 
