@@ -8,15 +8,14 @@ import { badRequestResponse, serverErrorResponse } from '../error-responses';
 
 const randomBytesAsync = promisify(randomBytes);
 
-// The created server is an HTTP server, but in production requests will come via
-// a reverse proxy or load balancer utilizing HTTPS.
-/* istanbul ignore next */
-const baseUriPrefix = process.env.NODE_ENV === 'production'
-  ? 'https://'
-  : 'http://';
+export async function create(db: Collection, t: TuftContext) {
+  const { body, protocol } = t.request;
 
-export async function createShortUrl(db: Collection, t: TuftContext) {
-  const originalUrl = t.request.searchParams.get('url');
+  if (typeof body !== 'object' || body === null || Buffer.isBuffer(body)) {
+    return badRequestResponse;
+  }
+
+  const originalUrl = body.url;
 
   try {
     new URL(originalUrl);
@@ -53,13 +52,11 @@ export async function createShortUrl(db: Collection, t: TuftContext) {
     }
 
     // Form the short URL to be passed back in the response.
-    const shortUrl = baseUriPrefix + t.request.headers.host + '/' + hash;
+    const shortUrl = protocol + '://' + t.request.headers.host + '/' + hash;
 
     return {
-      json: {
-        originalUrl,
-        shortUrl,
-      },
+      render: 'index.ejs',
+      data: { shortUrl },
     };
   }
 
