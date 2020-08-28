@@ -4,5 +4,6 @@ module.exports = {
     '/node_modules/',
   ],
   preset: 'ts-jest',
-  setupFiles: ['dotenv/config']
+  setupFiles: ['dotenv/config'],
+  clearMocks: true,
 };
