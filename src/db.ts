@@ -1,5 +1,7 @@
 import { MongoClient } from 'mongodb';
 
+const COLLECTION_NAME = 'shortUrls';
+
 /* istanbul ignore next */
 if (process.env.DB_URI === undefined) {
   const err = new Error('\'DB_URI\' environment variable must be set.');
@@ -14,12 +16,11 @@ if (process.env.DB_NAME === undefined) {
   process.exit(1);
 }
 
-const DB_URI = process.env.DB_URI;
-const DB_NAME = process.env.DB_NAME;
-const COLLECTION_NAME = 'shortUrls';
+const dbUri = process.env.DB_URI;
+const dbName = process.env.DB_NAME;
 
 export async function createDbInstance() {
-  const client = new MongoClient(DB_URI, {
+  const client = new MongoClient(dbUri, {
     useNewUrlParser: true,
     useUnifiedTopology: true,
   });
@@ -31,7 +32,7 @@ export async function createDbInstance() {
   });
 
   const db = client
-    .db(DB_NAME)
+    .db(dbName)
     .collection(COLLECTION_NAME);
 
   return db;
