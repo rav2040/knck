@@ -1,6 +1,6 @@
 import type { TuftContext } from 'tuft';
 
-import { createShortUrl } from '../../src/controllers/create';
+import { create } from '../../src/controllers/create';
 import { badRequestResponse, serverErrorResponse } from '../../src/error-responses';
 
 const MOCK_HOST = 'localhost:3000';
@@ -25,12 +25,6 @@ const mockConsoleError = jest
   .spyOn(console, 'error')
   .mockImplementation(() => { });
 
-beforeEach(() => {
-  mockDb.findOne.mockClear();
-  mockDb.insertOne.mockClear();
-  mockConsoleError.mockClear();
-});
-
 afterAll(() => {
   mockConsoleError.mockRestore();
 });
@@ -40,26 +34,46 @@ describe('When passed a context with an existing url', () => {
     const mockTuftContext = {
       request: {
         headers: { host: MOCK_HOST },
-        searchParams: new Map([['url', MOCK_URL]]),
+        body: { url: MOCK_URL },
       },
     } as unknown as TuftContext;
 
-    const result = await createShortUrl(
+    const result = await create(
       //@ts-expect-error
       mockDb,
       mockTuftContext,
     );
 
     expect(result).toBeDefined();
-    expect(result).toHaveProperty('json');
+    expect(result).toHaveProperty('render', 'index.ejs');
+    expect(result).toHaveProperty('data');
     //@ts-expect-error
-    expect(result.json).toHaveProperty('originalUrl', MOCK_URL);
+    expect(result.data).toHaveProperty('shortUrl');
     //@ts-expect-error
-    expect(result.json).toHaveProperty('shortUrl');
-    //@ts-expect-error
-    expect(result.json.shortUrl.startsWith('http://' + MOCK_HOST));
+    expect(result.data.shortUrl.startsWith('http://' + MOCK_HOST));
     expect(mockDb.findOne).toHaveBeenCalled();
     expect(mockDb.insertOne).toHaveBeenCalled();
+  });
+});
+
+describe('When passed a context with an invalid body', () => {
+  test('returns an object containing the expected error response', async () => {
+    const mockTuftContext = {
+      request: {
+        headers: { host: MOCK_HOST },
+        body: 42,
+      },
+    } as unknown as TuftContext;
+
+    const result = create(
+      //@ts-expect-error
+      mockDb,
+      mockTuftContext,
+    );
+
+    await expect(result).resolves.toEqual(badRequestResponse);
+    expect(mockDb.findOne).not.toHaveBeenCalled();
+    expect(mockDb.insertOne).not.toHaveBeenCalled();
   });
 });
 
@@ -68,11 +82,11 @@ describe('When passed a context with an invalid url', () => {
     const mockTuftContext = {
       request: {
         headers: { host: MOCK_HOST },
-        searchParams: new Map([['url', '']]),
+        body: { url: '' },
       },
     } as unknown as TuftContext;
 
-    const result = createShortUrl(
+    const result = create(
       //@ts-expect-error
       mockDb,
       mockTuftContext,
@@ -89,11 +103,11 @@ describe('When passed a context with a url that cannot be inserted', () => {
     const mockTuftContext = {
       request: {
         headers: { host: MOCK_HOST },
-        searchParams: new Map([['url', MOCK_URL_INVALID]]),
+        body: { url: MOCK_URL_INVALID },
       },
     } as unknown as TuftContext;
 
-    const result = createShortUrl(
+    const result = create(
       //@ts-expect-error
       mockDb,
       mockTuftContext,
@@ -110,11 +124,11 @@ describe('When the database query throws an error', () => {
     const mockTuftContext = {
       request: {
         headers: { host: MOCK_HOST },
-        searchParams: new Map([['url', MOCK_URL_ERROR]]),
+        body: { url: MOCK_URL_ERROR },
       },
     } as unknown as TuftContext;
 
-    const result = createShortUrl(
+    const result = create(
       //@ts-expect-error
       mockDb,
       mockTuftContext,
