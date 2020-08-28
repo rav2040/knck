@@ -9,7 +9,7 @@ import { badRequestResponse, serverErrorResponse } from '../error-responses';
 const randomBytesAsync = promisify(randomBytes);
 
 export async function create(db: Collection, t: TuftContext) {
-  const { body, protocol } = t.request;
+  const { headers, protocol, body } = t.request;
 
   if (typeof body !== 'object' || body === null || Buffer.isBuffer(body)) {
     return badRequestResponse;
@@ -52,7 +52,7 @@ export async function create(db: Collection, t: TuftContext) {
     }
 
     // Form the short URL to be passed back in the response.
-    const shortUrl = protocol + '://' + t.request.headers.host + '/' + hash;
+    const shortUrl = protocol + '://' + headers.host + '/' + hash;
 
     return {
       render: 'index.ejs',
