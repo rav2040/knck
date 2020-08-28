@@ -10,7 +10,7 @@ Knck requires [pm2](https://pm2.io/) to be installed as a peer dependency. It al
 
 You should also have the following environment variables set:
 
-* `NODE_ENV` - `'developmenmt'` or `'production'`.
+* `NODE_ENV` - `'development'` or `'production'`.
 * `HOST` - The server host address.
 * `PORT` - The server host port.
 * `DB_URI` - The connection string for a MongoDB database.
