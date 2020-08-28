@@ -20,7 +20,7 @@ export async function create(db: Collection, t: TuftContext) {
   try {
     new URL(originalUrl);
   } catch (err) {
-    // The provided url is not a valid URL.
+    // The provided URL is not valid.
     return badRequestResponse;
   }
 
