@@ -1,9 +1,9 @@
 import type { TuftContext } from 'tuft';
-import type { Collection } from 'mongodb';
+import type { DbInstance } from '../db';
 
 import { badRequestResponse, notFoundResponse, serverErrorResponse } from '../error-responses';
 
-export async function redirect(db: Collection, t: TuftContext) {
+export async function redirect(db: DbInstance, t: TuftContext) {
   const { hash } = t.request.params;
 
   if (hash.length !== 6) {
@@ -12,10 +12,10 @@ export async function redirect(db: Collection, t: TuftContext) {
   }
 
   try {
-    const result = await db.findOne({ hash });
+    const result = await db.getItem(hash);
 
     if (!result) {
-      // A document containing the provided hash does not exist.
+      // An item containing the provided hash does not exist.
       return notFoundResponse;
     }
 

@@ -1,5 +1,5 @@
 import type { TuftContext } from 'tuft';
-import type { Collection } from 'mongodb';
+import type { DbInstance } from '../db';
 
 import { randomBytes } from 'crypto';
 import { promisify } from 'util';
@@ -8,7 +8,7 @@ import { badRequestResponse, serverErrorResponse } from '../error-responses';
 
 const randomBytesAsync = promisify(randomBytes);
 
-export async function create(db: Collection, t: TuftContext) {
+export async function create(db: DbInstance, t: TuftContext) {
   const { headers, protocol, body } = t.request;
 
   if (typeof body !== 'object' || body === null || Buffer.isBuffer(body)) {
@@ -26,30 +26,23 @@ export async function create(db: Collection, t: TuftContext) {
 
   try {
     let hash: string;
+    let success = false;
 
-    // Create a hash of random bytes and then check that a document with that hash
-    // does not already exist in the database. If it does, keep creating random hashes
-    // until one that doesn't already exist is found.
     do {
       hash = (await randomBytesAsync(4))
-        .toString('base64')                     // Create a random string
-        .slice(0, 6)                            // Trim it to 6 characters
-        .replace(/[+/]/g, 'a');                 // Ensure no '+' characters
-    } while (await db.findOne({ hash }));
+        .toString('base64')                // Create a random string
+        .slice(0, 6)                       // Trim it to 6 characters
+        .replace(/[+/]/g, 'a');            // Ensure no '+' characters
 
-    // Create a new database document with the random hash and url.
-    const shortUrlDocument = {
-      hash,
-      url: originalUrl,
-      timestamp: new Date(),
-    };
+      // Create a new item with the random hash and url.
+      const knckUrlItem = {
+        hash,
+        url: originalUrl,
+      };
 
-    const result = await db.insertOne(shortUrlDocument);
-
-    if (result.insertedCount !== 1) {
-      // The document was not inserted successfully.
-      return serverErrorResponse;
-    }
+      // Add the item to the table.
+      success = await db.putItem(knckUrlItem);
+    } while (!success);
 
     // Form the short URL to be passed back in the response.
     const shortUrl = protocol + '://' + headers.host + '/' + hash;

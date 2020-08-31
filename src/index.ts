@@ -34,6 +34,12 @@ const assetsDir = join(__dirname, '../public');
 async function init() {
   const db = await createDbInstance();
 
+  if (!db) {
+    const err = Error('Unable to create database instance.');
+    console.error(err);
+    process.exit(1);
+  }
+
   const app = tuft({
     preHandlers: [
       createBodyParser('urlEncoded', MAX_BODY_SIZE),
