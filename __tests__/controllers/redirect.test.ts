@@ -1,4 +1,3 @@
-import type { Collection } from 'mongodb';
 import type { TuftContext } from 'tuft';
 
 import { redirect } from '../../src/controllers/redirect';
@@ -11,16 +10,16 @@ import {
 const MOCK_URL = 'https://www.example.com';
 
 const mockDb = {
-  findOne: async (query: { [key: string]: any }) => {
-    if (query.hash === 'aaaaaa') {
+  getItem: async (hash: string) => {
+    if (hash === 'aaaaaa') {
       return { url: MOCK_URL };
     }
 
-    if (query.hash === 'cccccc') {
+    if (hash === 'cccccc') {
       throw Error('mock error');
     }
   },
-} as Collection;
+};
 
 const mockConsoleError = jest
   .spyOn(console, 'error')
@@ -42,7 +41,11 @@ describe('When passed a context with an existing hash', () => {
       },
     } as unknown as TuftContext;
 
-    const result = redirect(mockDb, mockTuftContext);
+    const result = redirect(
+      //@ts-expect-error
+      mockDb,
+      mockTuftContext,
+    );
 
     await expect(result).resolves.toEqual({ redirect: MOCK_URL });
   });
@@ -56,7 +59,11 @@ describe('When passed a context with a non-existing hash', () => {
       },
     } as unknown as TuftContext;
 
-    const result = redirect(mockDb, mockTuftContext);
+    const result = redirect(
+      //@ts-expect-error
+      mockDb,
+      mockTuftContext,
+    );
 
     await expect(result).resolves.toEqual(notFoundResponse);
   });
@@ -70,7 +77,11 @@ describe('When passed a context with a hash of invalid length', () => {
       },
     } as unknown as TuftContext;
 
-    const result = redirect(mockDb, mockTuftContext);
+    const result = redirect(
+      //@ts-expect-error
+      mockDb,
+      mockTuftContext,
+    );
 
     await expect(result).resolves.toEqual(badRequestResponse);
   });
@@ -84,7 +95,11 @@ describe('When the database query throws an error', () => {
       },
     } as unknown as TuftContext;
 
-    const result = redirect(mockDb, mockTuftContext);
+    const result = redirect(
+      //@ts-expect-error
+      mockDb,
+      mockTuftContext,
+    );
 
     await expect(result).resolves.toEqual(serverErrorResponse);
     expect(mockConsoleError).toHaveBeenCalledWith(Error('mock error'));
