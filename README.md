@@ -13,7 +13,7 @@ If running in a development environment, you should also have the following envi
 * `NODE_ENV` - Set to `'development'`.
 * `HOST` - The server host address.
 * `PORT` - The server host port.
-* `DB_TTL` - The 'Time To Live' value for each short URL item (in seconds). If not set, defaults to `2_592_000` (30 days).
+* `DB_ITEM_TTL` - The 'Time To Live' value for each short URL item (in seconds). If not set, defaults to `2_592_000` (30 days).
 
 If running in a production environment, the values above are set in the pm2 config file: `ecosystem.config.yml`.
 
