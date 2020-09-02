@@ -1,5 +1,5 @@
 import type { TuftContext } from 'tuft';
-import type { DbInstance } from '../db';
+import type { DbClient } from '../db';
 
 import { randomBytes } from 'crypto';
 import { promisify } from 'util';
@@ -8,7 +8,7 @@ import { badRequestResponse, serverErrorResponse } from '../error-responses';
 
 const randomBytesAsync = promisify(randomBytes);
 
-export async function create(db: DbInstance, t: TuftContext) {
+export async function create(db: DbClient, t: TuftContext) {
   const { headers, protocol, body } = t.request;
 
   if (typeof body !== 'object' || body === null || Buffer.isBuffer(body)) {
@@ -41,7 +41,7 @@ export async function create(db: DbInstance, t: TuftContext) {
       };
 
       // Add the item to the table.
-      success = await db.putItem(knckUrlItem);
+      success = await db.put(knckUrlItem);
     } while (!success);
 
     // Form the short URL to be passed back in the response.

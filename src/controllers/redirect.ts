@@ -1,9 +1,9 @@
 import type { TuftContext } from 'tuft';
-import type { DbInstance } from '../db';
+import type { DbClient } from '../db';
 
 import { badRequestResponse, notFoundResponse, serverErrorResponse } from '../error-responses';
 
-export async function redirect(db: DbInstance, t: TuftContext) {
+export async function redirect(db: DbClient, t: TuftContext) {
   const { hash } = t.request.params;
 
   if (hash.length !== 6) {
@@ -12,7 +12,7 @@ export async function redirect(db: DbInstance, t: TuftContext) {
   }
 
   try {
-    const result = await db.getItem(hash);
+    const result = await db.get(hash);
 
     if (!result) {
       // An item containing the provided hash does not exist.
