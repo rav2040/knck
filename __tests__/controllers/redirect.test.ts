@@ -10,12 +10,12 @@ import {
 const MOCK_URL = 'https://www.example.com';
 
 const mockDbClient = {
-  get: async (hash: string) => {
-    if (hash === 'aaaaaa') {
+  get: async (urlId: string) => {
+    if (urlId === 'aaaaaa') {
       return { url: MOCK_URL };
     }
 
-    if (hash === 'cccccc') {
+    if (urlId === 'cccccc') {
       throw Error('mock error');
     }
   },
@@ -37,7 +37,7 @@ describe('When passed a context with an existing hash', () => {
   test('returns an object containing the expected URL', async () => {
     const mockTuftContext = {
       request: {
-        params: { hash: 'aaaaaa' },
+        params: { urlId: 'aaaaaa' },
       },
     } as unknown as TuftContext;
 
@@ -55,7 +55,7 @@ describe('When passed a context with a non-existing hash', () => {
   test('returns an object containing the expected error response', async () => {
     const mockTuftContext = {
       request: {
-        params: { hash: 'bbbbbb' },
+        params: { urlId: 'bbbbbb' },
       },
     } as unknown as TuftContext;
 
@@ -73,7 +73,7 @@ describe('When passed a context with a hash of invalid length', () => {
   test('returns an object containing the expected error response', async () => {
     const mockTuftContext = {
       request: {
-        params: { hash: 'aaaaa' },
+        params: { urlId: 'aaaaa' },
       },
     } as unknown as TuftContext;
 
@@ -91,7 +91,7 @@ describe('When the database query throws an error', () => {
   test('returns an object containing the expected error response', async () => {
     const mockTuftContext = {
       request: {
-        params: { hash: 'cccccc' },
+        params: { urlId: 'cccccc' },
       },
     } as unknown as TuftContext;
 
