@@ -1,4 +1,4 @@
-# Knck (DynamoDB) - URL shortening service
+# Knck - URL shortening service
 
 Example website: https://knck.xyz
 
@@ -6,7 +6,7 @@ Knck (pronounced *knock*) is a simple URL shortening service utilizing [Tuft](ht
 
 ## Prerequisities
 
-Knck (DynamoDB) requires [pm2](https://pm2.io/) to be installed as a peer dependency if running in production mode. It also requires access to [AWS DynamoDB](https://aws.amazon.com/dynamodb/).
+Knck requires [pm2](https://pm2.io/) to be installed as a peer dependency if running in production mode. It also requires access to [AWS DynamoDB](https://aws.amazon.com/dynamodb/).
 
 If running in a development environment, you should also have the following environment variables set:
 
