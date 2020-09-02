@@ -17,18 +17,19 @@ If running in a development environment, you should also have the following envi
 
 If running in a production environment, the values above are set in the pm2 config file: `ecosystem.config.yml`.
 
-A `DB_ENDPOINT` environment variable should also be set when running in development mode, which points to a [local instance of DynamoDB](https://docs.aws.amazon.com/amazondynamodb/latest/developerguide/DynamoDBLocal.html). If not set, the application will attempt to access the default endpoint of `'http://localhost:8000'`.
-
 ### DynamoDB Configuration
 
-The AWS region is set via the `AWS_REGION` environment variable. If not set, the region defaults to `'us-west-1'`.
-
-If running in production mode, AWS credentials are required by setting the following environment variables in the pm2 config file `ecosystem.config.yml`:
+If running in production mode, AWS credentials are required by setting the following environment variables in the pm2 config file:
 
 * `AWS_ACCESS_KEY_ID`
 * `AWS_SECRET_ACCESS_KEY`
 
 These credentials must have full access (read and write) to DynamoDB.
+
+The AWS region is set via the `AWS_REGION` environment variable. If not set, the region defaults to `'us-west-1'`.
+
+If running in development mode, a `DB_ENDPOINT` environment variable should also be set, which points to a [local instance of DynamoDB](https://docs.aws.amazon.com/amazondynamodb/latest/developerguide/DynamoDBLocal.html). If not set, the application will attempt to access the default endpoint of `'http://localhost:8000'`.
+
 
 ## Building locally
 
