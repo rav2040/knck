@@ -4,7 +4,7 @@ Example website: https://knck.xyz
 
 Knck (pronounced *knock*) is a simple URL shortening service utilizing [Tuft](https://www.tuft.dev) (Node.js) and written in TypeScript.
 
-## Prerequisities
+## Prerequisites
 
 Knck requires [pm2](https://pm2.io/) to be installed as a peer dependency if running in production mode. It also requires access to [AWS DynamoDB](https://aws.amazon.com/dynamodb/).
 
