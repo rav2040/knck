@@ -8,8 +8,8 @@ const MOCK_URL = 'https://www.example.com';
 const MOCK_URL_INVALID = 'https://www.example.com/invalid';
 const MOCK_URL_ERROR = 'https://www.example.com/error';
 
-const mockDb = {
-  putItem: jest.fn(async item => {
+const mockDbClient = {
+  put: jest.fn(async item => {
     if (item.url === MOCK_URL_ERROR) {
       throw Error('mock error');
     }
@@ -37,18 +37,18 @@ describe('When passed a context with an existing url', () => {
 
     const result = await create(
       //@ts-expect-error
-      mockDb,
+      mockDbClient,
       mockTuftContext,
     );
 
     expect(result).toBeDefined();
-    expect(result).toHaveProperty('render', 'index.ejs');
+    expect(result).toHaveProperty('render', 'index');
     expect(result).toHaveProperty('data');
     //@ts-expect-error
     expect(result.data).toHaveProperty('shortUrl');
     //@ts-expect-error
     expect(result.data.shortUrl.startsWith('http://' + MOCK_HOST));
-    expect(mockDb.putItem).toHaveBeenCalled();
+    expect(mockDbClient.put).toHaveBeenCalled();
   });
 });
 
@@ -63,12 +63,12 @@ describe('When passed a context with an invalid body', () => {
 
     const result = create(
       //@ts-expect-error
-      mockDb,
+      mockDbClient,
       mockTuftContext,
     );
 
     await expect(result).resolves.toEqual(badRequestResponse);
-    expect(mockDb.putItem).not.toHaveBeenCalled();
+    expect(mockDbClient.put).not.toHaveBeenCalled();
   });
 });
 
@@ -83,12 +83,12 @@ describe('When passed a context with an invalid url', () => {
 
     const result = create(
       //@ts-expect-error
-      mockDb,
+      mockDbClient,
       mockTuftContext,
     );
 
     await expect(result).resolves.toEqual(badRequestResponse);
-    expect(mockDb.putItem).not.toHaveBeenCalled();
+    expect(mockDbClient.put).not.toHaveBeenCalled();
   });
 });
 
@@ -103,12 +103,12 @@ describe('When the database query throws an error', () => {
 
     const result = create(
       //@ts-expect-error
-      mockDb,
+      mockDbClient,
       mockTuftContext,
     );
 
     await expect(result).resolves.toEqual(serverErrorResponse);
     expect(mockConsoleError).toHaveBeenCalledWith(Error('mock error'));
-    expect(mockDb.putItem).toHaveBeenCalled();
+    expect(mockDbClient.put).toHaveBeenCalled();
   });
 });

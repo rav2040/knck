@@ -9,8 +9,8 @@ import {
 
 const MOCK_URL = 'https://www.example.com';
 
-const mockDb = {
-  getItem: async (hash: string) => {
+const mockDbClient = {
+  get: async (hash: string) => {
     if (hash === 'aaaaaa') {
       return { url: MOCK_URL };
     }
@@ -43,7 +43,7 @@ describe('When passed a context with an existing hash', () => {
 
     const result = redirect(
       //@ts-expect-error
-      mockDb,
+      mockDbClient,
       mockTuftContext,
     );
 
@@ -61,7 +61,7 @@ describe('When passed a context with a non-existing hash', () => {
 
     const result = redirect(
       //@ts-expect-error
-      mockDb,
+      mockDbClient,
       mockTuftContext,
     );
 
@@ -79,7 +79,7 @@ describe('When passed a context with a hash of invalid length', () => {
 
     const result = redirect(
       //@ts-expect-error
-      mockDb,
+      mockDbClient,
       mockTuftContext,
     );
 
@@ -97,7 +97,7 @@ describe('When the database query throws an error', () => {
 
     const result = redirect(
       //@ts-expect-error
-      mockDb,
+      mockDbClient,
       mockTuftContext,
     );
 
