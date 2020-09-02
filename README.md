@@ -62,13 +62,13 @@ An original URL should be submitted under the key `url` in an `'x-www-form-urlen
 
 If the request body is not received in the expected format, the server will respond with `400 Bad Request`.
 
-### GET /{hash}
+### GET /{urlId}
 
-If the string `hash` is valid, and matches a database entry, the server will respond with `302 Found`, and redirect the client to the corresponding URL.
+If the string `urlId` is valid, and matches a database entry, the server will respond with `302 Found`, and redirect the client to the corresponding URL.
 
-If `hash` is valid, but does not match a database entry, the server will respond with `404 Not Found`.
+If `urlId` is valid, but does not match a database entry, the server will respond with `404 Not Found`.
 
-If `hash` is invalid (not 6 characters in length), the server will respond with `400 Bad Request`.
+If `urlId` is invalid (not 6 characters in length), the server will respond with `400 Bad Request`.
 
 ## People
 
