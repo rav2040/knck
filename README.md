@@ -19,15 +19,24 @@ If running in a production environment, the values above are set in the pm2 conf
 
 A `DB_ENDPOINT` environment variable should also be set when running in development mode, which points to a [local instance of DynamoDB](https://docs.aws.amazon.com/amazondynamodb/latest/developerguide/DynamoDBLocal.html). If not set, the application will attempt to access the default endpoint of `'http://localhost:8000'`.
 
-The rest of the DynamoDB configuration is pulled automatically from the local environment by the AWS SDK, and is not handled within the application code. It is up to you to make sure your machine is configured with AWS credentials that have full access (read and write) to DynamoDB.
+### DynamoDB Configuration
+
+The AWS region is set via the `AWS_REGION` environment variable. If not set, the region defaults to `'us-west-1'`.
+
+If running in production mode, AWS credentials are required by setting the following environment variables in the pm2 config file `ecosystem.config.yml`:
+
+* `AWS_ACCESS_KEY_ID`
+* `AWS_SECRET_ACCESS_KEY`
+
+These credentials must have full access (read and write) to DynamoDB.
 
 ## Building locally
 
 To build Knck after cloning to your machine, execute the following commands:
 
 ```sh
-  $ npm install
-  $ npm run build
+$ npm install
+$ npm run build
 ```
 
 ## Deploying
@@ -37,13 +46,13 @@ First, make sure that environment variables have been set as outlined above, and
 The server can then be started by executing:
 
 ```sh
-  $ npm start
+$ npm start
 ```
 
 Alternatively, to start a server in development mode, execute:
 
 ```sh
-  $ npm run start:dev
+$ npm run start:dev
 ```
 
 This requires that environment variables be set in a `.env` file in the project root, but does not require that pm2 be installed.
