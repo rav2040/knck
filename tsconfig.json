@@ -5,6 +5,7 @@
     "outDir": "app",
     "strict": true,
     "strictNullChecks": true,
+    "esModuleInterop": true,
     "removeComments": true,
     "noUnusedLocals": true,
     "noUnusedParameters": true,
