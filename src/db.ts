@@ -1,5 +1,5 @@
 import { DynamoDB } from 'aws-sdk';
-import { DB_TABLE_NAME, DEFAULT_DB_ENDPOINT } from './constants';
+import { DB_TABLE_NAME, DEFAULT_DB_ENDPOINT, DEFAULT_DB_TTL } from './constants';
 
 export interface DbClient {
   get: (hash: string) => Promise<KnckUrlItem | undefined>;
@@ -11,7 +11,6 @@ interface KnckUrlItem {
   url: string;
 }
 
-const DEFAULT_DB_TTL = 2_592_000;
 const DB_ITEM_EXISTS_ERROR_MSG = 'The conditional request failed';
 
 // How long database entries should exist before they expire (in seconds).
