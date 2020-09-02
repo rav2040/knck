@@ -1,9 +1,9 @@
-import { DB_TABLE_NAME } from './constants';
-import { config as AWSconfig, DynamoDB } from 'aws-sdk';
+import { DynamoDB } from 'aws-sdk';
+import { DB_TABLE_NAME, DEFAULT_DB_ENDPOINT } from './constants';
 
-export interface DbInstance {
-  getItem: (hash: string) => Promise<KnckUrlItem | undefined>;
-  putItem: (params: KnckUrlItem) => Promise<boolean>;
+export interface DbClient {
+  get: (hash: string) => Promise<KnckUrlItem | undefined>;
+  put: (params: KnckUrlItem) => Promise<boolean>;
 }
 
 interface KnckUrlItem {
@@ -11,50 +11,13 @@ interface KnckUrlItem {
   url: string;
 }
 
-const DB_ITEM_TTL = 2_592_000; // seconds
+const DEFAULT_DB_TTL = 2_592_000;
+const DB_ITEM_EXISTS_ERROR_MSG = 'The conditional request failed';
 
-if (process.env.NODE_ENV !== 'production') {
-  if (process.env.DB_ENDPOINT === undefined) {
-    const err = new Error('\'DB_ENDPOINT\' environment variable must be set.');
-    console.error(err);
-    process.exit(1);
-  }
+// How long database entries should exist before they expire (in seconds).
+const ttl = ~~(process.env.DB_ITEM_TTL ?? DEFAULT_DB_TTL);
 
-  AWSconfig.update({
-    endpoint: process.env.DB_ENDPOINT,
-  }, true);
-}
-
-else {
-  /* istanbul ignore next */
-  if (process.env.AWS_REGION === undefined) {
-    const err = new Error('\'AWS_REGION\' environment variable must be set.');
-    console.error(err);
-    process.exit(1);
-  }
-
-  if (process.env.AWS_ACCESS_KEY_ID === undefined) {
-    const err = new Error('\'AWS_ACCESS_KEY_ID\' environment variable must be set.');
-    console.error(err);
-    process.exit(1);
-  }
-
-  if (process.env.AWS_SECRET_ACCESS_KEY === undefined) {
-    const err = new Error('\'AWS_SECRET_ACCESS_KEY\' environment variable must be set.');
-    console.error(err);
-    process.exit(1);
-  }
-
-  AWSconfig.update({
-    region: process.env.AWS_REGION,
-    credentials: {
-      accessKeyId: process.env.AWS_ACCESS_KEY_ID,
-      secretAccessKey: process.env.AWS_SECRET_ACCESS_KEY,
-    },
-  });
-}
-
-
+// Parameters for creating the DynamoDB table.
 const tableParams = {
   TableName : DB_TABLE_NAME,
   KeySchema: [
@@ -69,36 +32,46 @@ const tableParams = {
   }
 };
 
-export async function createDbInstance(): Promise<DbInstance> {
+// Parameters for enabling TTL in the DynamoDB table.
+const ttlParams = {
+  TableName: DB_TABLE_NAME,
+  TimeToLiveSpecification: {
+    AttributeName: 'ExpirationTime',
+    Enabled: true,
+  }
+};
+
+export async function createDbClient(): Promise<DbClient> {
   try {
-    const db = new DynamoDB();
+    const dynamoDbConfig: DynamoDB.ClientConfiguration = {};
+
+    if (process.env.NODE_ENV !== 'production') {
+      // Set the DynamoDB endpoint to the local server.
+      dynamoDbConfig.endpoint = process.env.DB_ENDPOINT ?? DEFAULT_DB_ENDPOINT;
+    }
+
+    const db = new DynamoDB(dynamoDbConfig);
 
     // Check for existing table
     const { TableNames } = await db
       .listTables({})
       .promise();
 
-    if (!TableNames?.includes(DB_TABLE_NAME)) {
-      // Table does not exist
+    const tableNotExists = !TableNames?.includes(DB_TABLE_NAME);
 
+    if (tableNotExists) {
+      // Create table
       await db
         .createTable(tableParams)
         .promise();
 
-      const ttlParams = {
-        TableName: DB_TABLE_NAME,
-        TimeToLiveSpecification: {
-          AttributeName: 'ExpirationTime',
-          Enabled: true,
-        }
-      };
-
+      // Enable TTL on the table
       await db
         .updateTimeToLive(ttlParams)
         .promise();
     }
 
-    const getItem = async (hash: string) => {
+    const get = async (hash: string) => {
       const params = {
         TableName: DB_TABLE_NAME,
         Key: {
@@ -118,9 +91,9 @@ export async function createDbInstance(): Promise<DbInstance> {
       }
     };
 
-    const putItem = async ({ hash, url }: KnckUrlItem) => {
-      const currentTime = ~~(Date.now() / 1000); // in seconds, as an integer
-      const expirationTime = currentTime + DB_ITEM_TTL;
+    const put = async ({ hash, url }: KnckUrlItem) => {
+      const currentTime = ~~(Date.now() / 1000); // As an integer (in seconds)
+      const expirationTime = currentTime + ttl;
 
       const params = {
         TableName: DB_TABLE_NAME,
@@ -142,7 +115,7 @@ export async function createDbInstance(): Promise<DbInstance> {
       }
 
       catch (err) {
-        if (err.message === 'The conditional request failed') {
+        if (err.message === DB_ITEM_EXISTS_ERROR_MSG) {
           return false;
         }
 
@@ -150,7 +123,7 @@ export async function createDbInstance(): Promise<DbInstance> {
       }
     };
 
-    return { getItem, putItem };
+    return { get, put };
   }
 
   catch (err) {
