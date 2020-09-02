@@ -1,5 +1,10 @@
-import { DynamoDB } from 'aws-sdk';
-import { DB_TABLE_NAME, DEFAULT_DB_ENDPOINT, DEFAULT_DB_TTL } from './constants';
+import AWS, { DynamoDB } from 'aws-sdk';
+import {
+  DB_TABLE_NAME,
+  DEFAULT_AWS_REGION,
+  DEFAULT_DB_ENDPOINT,
+  DEFAULT_DB_TTL,
+} from './constants';
 
 export interface DbClient {
   get: (urlId: string) => Promise<KnckUrlItem | undefined>;
@@ -9,6 +14,25 @@ export interface DbClient {
 interface KnckUrlItem {
   urlId: string;
   url: string;
+}
+
+const dbConfig: DynamoDB.ClientConfiguration = {};
+
+if (process.env.NODE_ENV === 'production') {
+  AWS.config = new AWS.Config({
+    region: process.env.AWS_REGION ?? DEFAULT_AWS_REGION,
+    accessKeyId: process.env.AWS_ACCESS_KEY_ID,
+    secretAccessKey: process.env.AWS_SECRET_ACCESS_KEY,
+  });
+}
+
+else {
+  AWS.config = new AWS.Config({
+    region: process.env.AWS_REGION ?? DEFAULT_AWS_REGION,
+  });
+
+  // Set the DynamoDB endpoint to the local server.
+  dbConfig.endpoint = process.env.DB_ENDPOINT ?? DEFAULT_DB_ENDPOINT;
 }
 
 const DB_ITEM_EXISTS_ERROR_MSG = 'The conditional request failed';
@@ -42,14 +66,7 @@ const ttlParams = {
 
 export async function createDbClient(): Promise<DbClient> {
   try {
-    const dynamoDbConfig: DynamoDB.ClientConfiguration = {};
-
-    if (process.env.NODE_ENV !== 'production') {
-      // Set the DynamoDB endpoint to the local server.
-      dynamoDbConfig.endpoint = process.env.DB_ENDPOINT ?? DEFAULT_DB_ENDPOINT;
-    }
-
-    const db = new DynamoDB(dynamoDbConfig);
+    const db = new DynamoDB(dbConfig);
 
     // Check for existing table
     const { TableNames } = await db
@@ -70,6 +87,10 @@ export async function createDbClient(): Promise<DbClient> {
         .promise();
     }
 
+    /**
+     * Returns an item from the table if one is found with the provided URL ID.
+     */
+
     const get = async (urlId: string) => {
       const params = {
         TableName: DB_TABLE_NAME,
@@ -89,6 +110,11 @@ export async function createDbClient(): Promise<DbClient> {
         };
       }
     };
+
+    /**
+     * Adds an item to the table, returning true once the item is successfully added. Returns false
+     * if an item with the provided URL ID already exists in the table.
+     */
 
     const put = async ({ urlId, url }: KnckUrlItem) => {
       const currentTime = ~~(Date.now() / 1000); // As an integer (in seconds)
