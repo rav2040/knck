@@ -4,18 +4,18 @@ import type { DbClient } from '../db';
 import { badRequestResponse, notFoundResponse, serverErrorResponse } from '../error-responses';
 
 export async function redirect(db: DbClient, t: TuftContext) {
-  const { hash } = t.request.params;
+  const { urlId } = t.request.params;
 
-  if (hash.length !== 6) {
-    // The provided path segment is not a valid hash.
+  if (urlId.length !== 6) {
+    // The provided path segment is not a valid url ID.
     return badRequestResponse;
   }
 
   try {
-    const result = await db.get(hash);
+    const result = await db.get(urlId);
 
     if (!result) {
-      // An item containing the provided hash does not exist.
+      // An item containing the provided url ID does not exist.
       return notFoundResponse;
     }
 

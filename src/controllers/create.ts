@@ -25,18 +25,18 @@ export async function create(db: DbClient, t: TuftContext) {
   }
 
   try {
-    let hash: string;
+    let urlId: string;
     let success = false;
 
     do {
-      hash = (await randomBytesAsync(4))
+      urlId = (await randomBytesAsync(4))
         .toString('base64')                // Create a random string
         .slice(0, 6)                       // Trim it to 6 characters
         .replace(/[+/]/g, 'a');            // Ensure no '+' characters
 
-      // Create a new item with the random hash and url.
+      // Create a new item with a random ID and url.
       const knckUrlItem = {
-        hash,
+        urlId,
         url: originalUrl,
       };
 
@@ -45,7 +45,7 @@ export async function create(db: DbClient, t: TuftContext) {
     } while (!success);
 
     // Form the short URL to be passed back in the response.
-    const shortUrl = protocol + '://' + headers.host + '/' + hash;
+    const shortUrl = protocol + '://' + headers.host + '/' + urlId;
 
     return {
       render: 'index',

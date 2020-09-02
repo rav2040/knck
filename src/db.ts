@@ -2,12 +2,12 @@ import { DynamoDB } from 'aws-sdk';
 import { DB_TABLE_NAME, DEFAULT_DB_ENDPOINT, DEFAULT_DB_TTL } from './constants';
 
 export interface DbClient {
-  get: (hash: string) => Promise<KnckUrlItem | undefined>;
+  get: (urlId: string) => Promise<KnckUrlItem | undefined>;
   put: (params: KnckUrlItem) => Promise<boolean>;
 }
 
 interface KnckUrlItem {
-  hash: string;
+  urlId: string;
   url: string;
 }
 
@@ -70,11 +70,11 @@ export async function createDbClient(): Promise<DbClient> {
         .promise();
     }
 
-    const get = async (hash: string) => {
+    const get = async (urlId: string) => {
       const params = {
         TableName: DB_TABLE_NAME,
         Key: {
-          'UrlId': { S: hash },
+          'UrlId': { S: urlId },
         },
       };
 
@@ -84,13 +84,13 @@ export async function createDbClient(): Promise<DbClient> {
 
       if (Item) {
         return {
-          hash: Item.UrlId.S as string,
+          urlId: Item.UrlId.S as string,
           url: Item.Url.S as string,
         };
       }
     };
 
-    const put = async ({ hash, url }: KnckUrlItem) => {
+    const put = async ({ urlId, url }: KnckUrlItem) => {
       const currentTime = ~~(Date.now() / 1000); // As an integer (in seconds)
       const expirationTime = currentTime + ttl;
 
@@ -99,7 +99,7 @@ export async function createDbClient(): Promise<DbClient> {
         ReturnConsumedCapacity: 'TOTAL',
         ConditionExpression: 'attribute_not_exists(UrlId)',
         Item: {
-          'UrlId': { S: hash },
+          'UrlId': { S: urlId },
           'Url': { S: url },
           'ExpirationTime': { N: expirationTime.toString() },
         },

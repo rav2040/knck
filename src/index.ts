@@ -58,7 +58,7 @@ async function init() {
         data: { shortUrl: null },
       })
       .set('POST /', create.bind(null, dbClient))
-      .set('GET /{hash}', redirect.bind(null, dbClient))
+      .set('GET /{urlId}', redirect.bind(null, dbClient))
       .set('/{**}', notFoundResponse)
       .onError(console.error);
 
