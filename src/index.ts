@@ -59,7 +59,7 @@ async function init() {
 
   app
     .set('GET /', {
-      render: 'index.ejs',
+      render: 'index',
       data: { shortUrl: null },
     })
     .set('POST /', create.bind(null, db))
