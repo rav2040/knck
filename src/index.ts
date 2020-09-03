@@ -53,10 +53,7 @@ async function init() {
     await app.static('/', assetsDir);
 
     app
-      .set('GET /', {
-        render: 'index',
-        data: { shortUrl: null },
-      })
+      .set('GET /', { render: 'index' })
       .set('POST /', create.bind(null, dbClient))
       .set('GET /{urlId}', redirect.bind(null, dbClient))
       .set('/{**}', notFoundResponse)

@@ -1,0 +1,20 @@
+<!doctype html>
+<html lang="en">
+  <%- include('partials/head') %>
+  <body>
+    <main role="main" class="inner cover text-center">
+      <div id="main-container" class="position-relative">
+        <h1 id="title">knck</h1>
+        <div id="result-container" class="pt-5">
+          <p>Your new short URL is</p>
+          <h4><a href="<%= shortUrl %>" id="result-link" target="_blank"><%= shortUrl.replace(/^https?:\/\//, '') %></a></h4>
+          <br>
+          <p>Short URLs expire automatically after 30 days.</p>
+          <br>
+          <a href="/">Shorten another URL</a>
+        </div>
+      </div>
+    </main>
+    <%- include('partials/footer') %>
+  </body>
+</html>

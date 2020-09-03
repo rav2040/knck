@@ -48,7 +48,7 @@ export async function create(db: DbClient, t: TuftContext) {
     const shortUrl = protocol + '://' + headers.host + '/' + urlId;
 
     return {
-      render: 'index',
+      render: 'result',
       data: { shortUrl },
     };
   }
