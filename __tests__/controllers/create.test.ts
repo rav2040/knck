@@ -42,7 +42,7 @@ describe('When passed a context with an existing url', () => {
     );
 
     expect(result).toBeDefined();
-    expect(result).toHaveProperty('render', 'index');
+    expect(result).toHaveProperty('render', 'result');
     expect(result).toHaveProperty('data');
     //@ts-expect-error
     expect(result.data).toHaveProperty('shortUrl');
