@@ -30,3 +30,13 @@ body {
 .text-faded {
   color: #bbb;
 }
+
+@media only screen and (max-height: 520px) {
+  #main-container {
+    top: 5vh;
+  }
+
+  footer {
+    display: none;
+  }
+}
