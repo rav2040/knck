@@ -38,6 +38,11 @@ body {
   max-width: 720px;
 }
 
+#copy-btn,
+#copy-btn-selected {
+  width: 5rem;
+}
+
 @media only screen and (max-width: 720px) {
   #subtitle {
     font-size: 1.5rem;
