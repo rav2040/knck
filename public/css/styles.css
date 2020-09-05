@@ -1,9 +1,9 @@
-@import url('https://fonts.googleapis.com/css2?family=Fira+Mono:wght@400&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Lobster&display=swap');
 
 html,
 body {
   height: 100%;
-  background-color: #eee;
+  background-color: #f5f5f5;
 }
 
 body {
@@ -12,23 +12,46 @@ body {
   flex-direction: column;
 }
 
-.col {
-  padding: 0;
-  margin: auto;
-}
-
 #main-container {
   top: 15vh;
 }
 
 #title {
   font-size: 6em;
-  font-family: 'Fira Mono', monospace;
-  color: #333;
+  font-family: 'Lobster', cursive;
+  color: rgb(53, 83, 129);
+}
+
+#subtitle {
+  font-weight: 400;
 }
 
 .text-faded {
   color: #bbb;
+}
+
+#hidden-url-container {
+  display: none;
+}
+
+.form-group {
+  max-width: 720px;
+}
+
+@media only screen and (max-width: 720px) {
+  #subtitle {
+    font-size: 1.5rem;
+  }
+
+  footer p {
+    font-size: 0.75rem;
+  }
+}
+
+@media only screen and (max-width: 520px) {
+  #subtitle {
+    font-size: 1.1rem;
+  }
 }
 
 @media only screen and (max-height: 520px) {
