@@ -2,6 +2,10 @@
 
 Example website: https://knck.xyz
 
+![Node.js CI](https://github.com/rav2040/knck/workflows/Node.js%20CI/badge.svg)
+[![Coverage Status](https://coveralls.io/repos/github/rav2040/knck/badge.svg)](https://coveralls.io/github/rav2040/knck)
+[![Known Vulnerabilities](https://snyk.io/test/github/rav2040/knck/badge.svg?targetFile=package.json)](https://snyk.io/test/github/rav2040/knck?targetFile=package.json)
+
 Knck (pronounced *knock*) is a simple URL shortening service utilizing [Tuft](https://www.tuft.dev) (Node.js) and written in TypeScript.
 
 ## Prerequisites
