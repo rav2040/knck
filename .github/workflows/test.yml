@@ -26,8 +26,8 @@ jobs:
       env:
         CI: true
         PORT: 3000
-        DB_URI: fake_uri
-        DB_NAME: knck-dev
+        AWS_REGION: ap-southeast-2
+        DB_ENDPOINT: http://localhost:8000
     - name: Coveralls
       uses: coverallsapp/github-action@master
       with:
