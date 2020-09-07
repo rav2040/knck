@@ -2,10 +2,11 @@ import { tuft, createBodyParser } from 'tuft';
 import { createHelmetPrehandler } from '@tuft/helmet-prehandler';
 import { createViewResponder } from '@tuft/view-responder';
 import { join } from 'path';
-import { createDbClient } from './db';
+import { createClient } from './db';
 import { create } from './controllers/create';
 import { redirect } from './controllers/redirect';
 import { notFoundResponse } from './error-responses';
+import { DB_TABLE_NAME, DB_ITEM_TTL } from './constants';
 
 if (process.env.NODE_ENV !== 'development' && process.env.NODE_ENV !== 'production') {
   const err = new Error('\'NODE_ENV \' environment variable must be set to \'development\' or \'production\'.');
@@ -33,7 +34,7 @@ const assetsDir = join(__dirname, '../public');
 
 async function init() {
   try {
-    const dbClient = await createDbClient();
+    const dbClient = await createClient(DB_TABLE_NAME, DB_ITEM_TTL);
 
     const app = tuft({
       preHandlers: [
