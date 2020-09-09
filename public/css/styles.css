@@ -38,8 +38,7 @@ body {
   max-width: 720px;
 }
 
-#copy-btn,
-#copy-btn-selected {
+#copy-btn {
   width: 5rem;
 }
 
