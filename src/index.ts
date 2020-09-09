@@ -8,8 +8,12 @@ import { redirect } from './controllers/redirect';
 import { notFoundResponse } from './error-responses';
 import { DB_TABLE_NAME, DB_ITEM_TTL } from './constants';
 
-if (process.env.NODE_ENV !== 'development' && process.env.NODE_ENV !== 'production') {
-  const err = new Error('\'NODE_ENV \' environment variable must be set to \'development\' or \'production\'.');
+if (
+  process.env.NODE_ENV !== 'development' &&
+  process.env.NODE_ENV !== 'test' &&
+  process.env.NODE_ENV !== 'production'
+) {
+  const err = new Error('\'NODE_ENV \' environment variable must be set to \'development\', \'test\', or \'production\'.');
   console.error(err);
   process.exit(1);
 }
