@@ -7,14 +7,14 @@
       <h1 id="title">knck</h1>
       <div id="result-container" class="pt-5">
         <p class="my-0">Your new short URL is</p>
-        <h3 class="align-middle my-3"><%= shortUrl.replace(/^https?:\/\//, '') %></h3>
+        <h3 id="short-url" class="align-middle my-3"><%= shortUrl.replace(/^https?:\/\//, '') %></h3>
         <div class="container-fluid py-3 my-3">
           <div class="row justify-content-center no-gutters">
             <div class="col-auto px-2">
               <button type="button" id="copy-btn" class="btn btn-primary text-no-wrap">Copy</button>
             </div>
             <div class="col-auto px-2">
-              <a href="/" id="foo" class="btn btn-secondary text-no-wrap" role="button">"Knck" Another URL</a>
+              <a href="/" id="home-link" class="btn btn-secondary text-no-wrap" role="button">"Knck" Another URL</a>
             </div>
           </div>
         </div>
