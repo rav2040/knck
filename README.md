@@ -2,7 +2,8 @@
 
 Example website: https://knck.xyz
 
-![Node.js CI](https://github.com/rav2040/knck/workflows/Node.js%20CI/badge.svg)
+![Unit Tests](https://github.com/rav2040/knck/workflows/Unit%20Tests/badge.svg)
+![E2E Tests](https://github.com/rav2040/knck/workflows/E2E%20Tests/badge.svg)
 [![Coverage Status](https://coveralls.io/repos/github/rav2040/knck/badge.svg)](https://coveralls.io/github/rav2040/knck)
 [![Known Vulnerabilities](https://snyk.io/test/github/rav2040/knck/badge.svg?targetFile=package.json)](https://snyk.io/test/github/rav2040/knck?targetFile=package.json)
 
