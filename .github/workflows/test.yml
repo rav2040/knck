@@ -38,6 +38,8 @@ jobs:
       uses: coverallsapp/github-action@master
       with:
         github-token: ${{ secrets.GITHUB_TOKEN }}
+    - run: mkdir ~/.aws
+    - run: npm echo "[default]\naws_access_key_id = nil\naws_secret_access_key = nil" > ~/.aws/credentials
     - run: npm run test:e2e
       env:
         CI: true
