@@ -23,6 +23,7 @@
     "node_modules/",
     "app/",
     "coverage/",
+    "cypress/",
     "public/"
   ],
   "rules": {
