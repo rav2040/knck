@@ -5,11 +5,9 @@ copyButton.onclick = () => {
     .trim();
   navigator.clipboard.writeText(shortUrl)
     .then(() => {
-      copyButton.removeAttribute('id');
-      copyButton.setAttribute('id', 'copy-btn');
-      copyButton.classList.remove('btn-primary');
-      copyButton.classList.add('btn-success');
       copyButton.innerHTML = 'Copied';
+      copyButton.classList.add('btn-success');
+      copyButton.classList.remove('btn-primary');
       copyButton.blur();
     })
     .catch(console.error);
