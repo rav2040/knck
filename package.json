@@ -1,6 +1,6 @@
 {
   "name": "knck",
-  "version": "1.2.1",
+  "version": "1.2.2",
   "description": "knck - a URL-shortening service",
   "private": true,
   "author": "Stuart Kennedy",
@@ -17,13 +17,12 @@
   "scripts": {
     "test": "jest",
     "test:coverage": "jest --coverage",
-    "test:e2e": "npm run start:test & wait-on http://localhost:3000 && cypress run",
+    "test:e2e": "npm run start:ci & wait-on http-get://localhost:3000 && cypress run",
     "cy:open": "cypress open",
-    "cy:run": "cypress run",
     "build": "rm -rf ./app && tsc -b",
     "start": "npm run build && pm2 restart ecosystem.config.yml",
     "start:dev": "nodemon -w ./src/index.ts -e ts-node -r dotenv/config ./src/index.ts",
-    "start:test": "ts-node -r dotenv/config ./src/index.ts"
+    "start:ci": "npm run build && node -r dotenv/config ./app/index.js"
   },
   "devDependencies": {
     "@types/jest": "^26.0.13",
