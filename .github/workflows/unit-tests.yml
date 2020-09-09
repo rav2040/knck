@@ -1,26 +1,15 @@
-name: Node.js CI
-
+name: Unit Tests
 on:
   push:
     branches: [ master ]
   pull_request:
     branches: [ master ]
-
 jobs:
   build:
-
     runs-on: ubuntu-latest
-
-    services:
-      dynamodb:
-        image: amazon/dynamodb-local
-        ports:
-          - 8000:8000
-
     strategy:
       matrix:
         node-version: [12.x]
-
     steps:
     - uses: actions/checkout@v2
     - name: Use Node.js ${{ matrix.node-version }}
@@ -28,7 +17,7 @@ jobs:
       with:
         node-version: ${{ matrix.node-version }}
     - run: npm ci
-    - run: npm run test:coverage
+    - run: npm run test:unit
       env:
         CI: true
         PORT: 3000
@@ -38,13 +27,3 @@ jobs:
       uses: coverallsapp/github-action@master
       with:
         github-token: ${{ secrets.GITHUB_TOKEN }}
-    - run: mkdir ~/.aws
-    - run: printf "[default]\naws_access_key_id = nil\naws_secret_access_key = nil\n" > ~/.aws/credentials
-    - run: npm run test:e2e
-      env:
-        CI: true
-        NODE_ENV: test
-        HOST: 'localhost'
-        PORT: 3000
-        AWS_REGION: ap-southeast-2
-        DB_ENDPOINT: http://localhost:8000

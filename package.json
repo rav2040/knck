@@ -15,14 +15,13 @@
   },
   "main": "app/index.js",
   "scripts": {
-    "test": "jest",
-    "test:coverage": "jest --coverage",
-    "test:e2e": "npm run start:ci & wait-on http-get://localhost:3000 && cypress run",
     "cy:open": "cypress open",
+    "test:unit": "jest --coverage",
+    "test:e2e": "./e2e-tests.sh",
     "build": "rm -rf ./app && tsc -b",
     "start": "npm run build && pm2 restart ecosystem.config.yml",
     "start:dev": "nodemon -w ./src/index.ts -e ts-node -r dotenv/config ./src/index.ts",
-    "start:ci": "npm run build && node -r dotenv/config ./app/index.js"
+    "start:test": "npm run build && node -r dotenv/config ./app/index.js"
   },
   "devDependencies": {
     "@types/jest": "^26.0.13",
