@@ -9,7 +9,7 @@ on:
 jobs:
   build:
 
-    runs-on: ubuntu-20.04
+    runs-on: ubuntu-latest
 
     strategy:
       matrix:
@@ -32,3 +32,16 @@ jobs:
       uses: coverallsapp/github-action@master
       with:
         github-token: ${{ secrets.GITHUB_TOKEN }}
+    - name: DynamoDB
+      services:
+        dynamodb:
+          image: dynamodb-local
+          ports:
+            - 8000:8000
+    - run: npm run test:e2e
+      env:
+        CI: true
+        HOST: 'localhost'
+        PORT: 3000
+        AWS_REGION: ap-southeast-2
+        DB_ENDPOINT: http://localhost:8000
