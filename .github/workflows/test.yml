@@ -11,6 +11,12 @@ jobs:
 
     runs-on: ubuntu-latest
 
+    services:
+      dynamodb:
+        image: dynamodb-local
+        ports:
+          - 8000:8000
+
     strategy:
       matrix:
         node-version: [12.x]
@@ -32,12 +38,6 @@ jobs:
       uses: coverallsapp/github-action@master
       with:
         github-token: ${{ secrets.GITHUB_TOKEN }}
-    - name: DynamoDB
-      services:
-        dynamodb:
-          image: dynamodb-local
-          ports:
-            - 8000:8000
     - run: npm run test:e2e
       env:
         CI: true
