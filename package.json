@@ -1,6 +1,6 @@
 {
   "name": "knck",
-  "version": "1.2.2",
+  "version": "1.2.3",
   "description": "knck - a URL-shortening service",
   "private": true,
   "author": "Stuart Kennedy",
@@ -45,7 +45,7 @@
   "dependencies": {
     "@tuft/helmet-prehandler": "^1.0.0",
     "@tuft/view-responder": "^1.1.1",
-    "aws-sdk": "^2.748.0",
-    "tuft": "^2.0.0-beta.7"
+    "aws-sdk": "^2.749.0",
+    "tuft": "^2.0.0"
   }
 }
