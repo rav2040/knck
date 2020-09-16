@@ -40,11 +40,11 @@ export class DynamoDB {
   putItem({ TableName, ReturnConsumedCapacity, ConditionExpression, Item }: PutItemParams) {
     return {
       async promise() {
-        if (Item?.UrlId?.S === 'trigger_mock_error') {
+        if (Item?.UrlId?.S === 'trigger_empty_response') {
           return {};
         }
 
-        if (Item?.UrlId?.S === 'trigger_empty_response') {
+        if (Item?.UrlId?.S === 'trigger_mock_error') {
           throw Error('mock error');
         }
 

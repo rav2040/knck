@@ -77,7 +77,7 @@ describe('client.put()', () => {
         urlId: 'fsGf2Q',
         url: 'https://www.example.com/',
       });
-      expect(promise).resolves.toBe(true);
+      await expect(promise).resolves.toBe(true);
     });
   });
 
@@ -88,7 +88,7 @@ describe('client.put()', () => {
         urlId: 'f6G32a',
         url: 'https://www.example.com/',
       });
-      expect(promise).resolves.toBe(false);
+      await expect(promise).resolves.toBe(false);
     });
   });
 
@@ -97,7 +97,7 @@ describe('client.put()', () => {
       const client = await createClient('mockTable', TTL);
       //@ts-expect-error
       const promise = client.put({});
-      expect(promise).resolves.toBe(false);
+      await expect(promise).resolves.toBe(false);
     });
   });
 
@@ -108,7 +108,7 @@ describe('client.put()', () => {
         urlId: 'trigger_mock_error',
         url: 'https://www.example.com/',
       });
-      expect(promise).rejects.toThrow(Error('mock error'));
+      await expect(promise).rejects.toThrow(Error('mock error'));
     });
   });
 
@@ -119,7 +119,7 @@ describe('client.put()', () => {
         urlId: 'trigger_empty_response',
         url: 'https://www.example.com/',
       });
-      expect(promise).resolves.toBe(false);
+      await expect(promise).resolves.toBe(false);
     });
   });
 });
