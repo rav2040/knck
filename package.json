@@ -1,6 +1,6 @@
 {
   "name": "knck",
-  "version": "1.2.3",
+  "version": "1.2.4",
   "description": "knck - a URL-shortening service",
   "private": true,
   "author": "Stuart Kennedy",
