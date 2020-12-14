@@ -14,7 +14,7 @@ it('Shortening a URL works as expected', () => {
 
   cy.get('#short-url')
     .then($h4 => {
-      const shortUrl = 'http://' + $h4.text();
+      const shortUrl = 'http://' + $h4.text().trim();
 
       cy.get('#copy-btn')
         .contains('Copy')

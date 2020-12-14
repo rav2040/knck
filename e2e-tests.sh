@@ -2,8 +2,8 @@
 
 set -e
 
-# Create empty AWS credential values to prevent the AWS SDK from throwing an error.
-mkdir $HOME/.aws
+# Create empty AWS credential values if they don't exist to prevent AWS SDK from throwing an error.
+mkdir -p $HOME/.aws
 printf "[default]\naws_access_key_id = nil\naws_secret_access_key = nil\n" > $HOME/.aws/credentials
 
 # Start the server.
