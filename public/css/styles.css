@@ -3,7 +3,7 @@
 html,
 body {
   height: 100%;
-  background-color: #f5f5f5;
+  background-color: #fafafa;
 }
 
 body {
@@ -19,7 +19,7 @@ body {
 #title {
   font-size: 6em;
   font-family: 'Lobster', cursive;
-  color: rgb(53, 83, 129);
+  color: #355381;
 }
 
 #subtitle {
