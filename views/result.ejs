@@ -1,32 +1,35 @@
 <!doctype html>
 <html lang="en">
 <%- include('partials/head') %>
-<body>
-  <main role="main" class="inner cover text-center">
-    <div id="main-container" class="position-relative">
-      <h1 id="title">knck</h1>
-      <div id="result-container" class="pt-5">
-        <p class="my-0">Your new short URL is</p>
-        <h3 id="short-url" class="align-middle my-3"><%= shortUrl.replace(/^https?:\/\//, '') %></h3>
-        <div class="container-fluid py-3 my-3">
-          <div class="row justify-content-center no-gutters">
-            <div class="col-auto px-2">
-              <button type="button" id="copy-btn" class="btn btn-primary text-no-wrap">Copy</button>
-            </div>
-            <div class="col-auto px-2">
-              <a href="/" id="home-link" class="btn btn-secondary text-no-wrap" role="button">"Knck" Another URL</a>
+
+  <body>
+    <main role="main" class="inner cover text-center">
+      <div id="main-container" class="position-relative">
+        <%- include('partials/title') %>
+        <div id="result-container" class="pt-5">
+          <p class="my-0">Your new short URL is</p>
+          <h3 id="short-url" class="align-middle my-3">
+            <%= shortUrl.replace(/^https?:\/\//, '' ) %>
+          </h3>
+          <div class="container-fluid py-3 my-3">
+            <div class="row justify-content-center no-gutters">
+              <div class="col-auto px-2">
+                <button type="button" id="copy-btn" class="btn btn-primary text-no-wrap">Copy</button>
+              </div>
+              <div class="col-auto px-2">
+                <a href="/" id="home-link" class="btn btn-secondary text-no-wrap" role="button">"Knck" Another URL</a>
+              </div>
             </div>
           </div>
+          <p><em>Short URLs expire automatically after 30 days.</em></p>
         </div>
-        <p><em>Short URLs expire automatically after 30 days.</em></p>
       </div>
+    </main>
+    <div id="hidden-url-container">
+      <%= shortUrl %>
     </div>
-  </main>
-  <div id="hidden-url-container">
-    <%= shortUrl %>
-  </div>
-  <%- include('partials/footer') %>
-  <script src="js/clipboard.js" type="application/javascript"></script>
-</body>
+    <%- include('partials/footer') %>
+    <script src="js/clipboard.js" type="application/javascript"></script>
+  </body>
 
 </html>
