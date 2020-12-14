@@ -1,9 +1,9 @@
 name: E2E Tests
 on:
   push:
-    branches: [ master ]
+    branches: [master]
   pull_request:
-    branches: [ master ]
+    branches: [master]
 jobs:
   build:
     runs-on: ubuntu-latest
@@ -16,17 +16,17 @@ jobs:
       matrix:
         node-version: [12.x]
     steps:
-    - uses: actions/checkout@v2
-    - name: Use Node.js ${{ matrix.node-version }}
-      uses: actions/setup-node@v1
-      with:
-        node-version: ${{ matrix.node-version }}
-    - run: npm ci
-    - run: npm run test:e2e
-      env:
-        CI: true
-        NODE_ENV: test
-        HOST: 'localhost'
-        PORT: 3000
-        AWS_REGION: ap-southeast-2
-        DB_ENDPOINT: http://localhost:8000
+      - uses: actions/checkout@v2
+      - name: Use Node.js ${{ matrix.node-version }}
+        uses: actions/setup-node@v1
+        with:
+          node-version: ${{ matrix.node-version }}
+      - run: npm ci
+      - run: npm run test:e2e
+        env:
+          CI: true
+          NODE_ENV: test
+          HOST: "localhost"
+          PORT: 3000
+          AWS_REGION: ap-southeast-2
+          DB_ENDPOINT: http://localhost:8000
