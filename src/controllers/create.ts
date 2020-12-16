@@ -15,6 +15,7 @@ export async function create(db: DbClient, t: TuftContext) {
     return badRequestResponse;
   }
 
+  const jsonResponse = Boolean(body.jsonResponse);
   const originalUrl = body.url;
 
   try {
@@ -46,6 +47,12 @@ export async function create(db: DbClient, t: TuftContext) {
 
     // Form the short URL to be passed back in the response.
     const shortUrl = protocol + '://' + headers.host + '/' + urlId;
+
+    if (jsonResponse) {
+      return {
+        json: { shortUrl },
+      };
+    }
 
     return {
       render: 'result',

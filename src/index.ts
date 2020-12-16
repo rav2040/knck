@@ -41,6 +41,9 @@ async function init() {
     const dbClient = await createClient(DB_TABLE_NAME, DB_ITEM_TTL);
 
     const app = tuft({
+      cors: {
+        allowOrigin: 'https://reactclient.knck.xyz',
+      },
       preHandlers: [
         createBodyParser('urlEncoded', MAX_BODY_SIZE),
         createHelmetPrehandler({
