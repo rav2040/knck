@@ -1,6 +1,6 @@
 {
   "name": "knck",
-  "version": "1.2.4",
+  "version": "1.3.0",
   "description": "knck - a URL-shortening service",
   "private": true,
   "author": "Stuart Kennedy",
@@ -25,13 +25,13 @@
   },
   "devDependencies": {
     "@types/jest": "^26.0.19",
-    "@types/node": "^14.14.13",
-    "@typescript-eslint/eslint-plugin": "^4.9.1",
-    "@typescript-eslint/parser": "^4.9.1",
+    "@types/node": "^14.14.14",
+    "@typescript-eslint/eslint-plugin": "^4.11.0",
+    "@typescript-eslint/parser": "^4.11.0",
     "clipboardy": "^2.3.0",
-    "cypress": "^6.1.0",
+    "cypress": "^6.2.0",
     "dotenv": "^8.2.0",
-    "eslint": "^7.15.0",
+    "eslint": "^7.16.0",
     "jest": "^26.6.3",
     "nodemon": "^2.0.6",
     "ts-jest": "^26.4.4",
@@ -45,7 +45,7 @@
   "dependencies": {
     "@tuft/helmet-prehandler": "^1.0.0",
     "@tuft/view-responder": "^1.1.1",
-    "aws-sdk": "^2.809.0",
+    "aws-sdk": "^2.816.0",
     "tuft": "^2.5.1"
   }
 }
