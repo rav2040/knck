@@ -52,6 +52,34 @@ describe('When passed a context with an existing url', () => {
   });
 });
 
+describe('When passed a context requesting a JSON response', () => {
+  test('returns an object containing the original URL and a valid short URL', async () => {
+    const mockTuftContext = {
+      request: {
+        headers: { host: MOCK_HOST },
+        body: {
+          url: MOCK_URL,
+          jsonResponse: true,
+        },
+      },
+    } as unknown as TuftContext;
+
+    const result = await create(
+      //@ts-expect-error
+      mockDbClient,
+      mockTuftContext,
+    );
+
+    expect(result).toBeDefined();
+    expect(result).toHaveProperty('json');
+    //@ts-expect-error
+    expect(result.json).toHaveProperty('shortUrl');
+    //@ts-expect-error
+    expect(result.json.shortUrl.startsWith('http://' + MOCK_HOST));
+    expect(mockDbClient.put).toHaveBeenCalled();
+  });
+});
+
 describe('When passed a context with an invalid body', () => {
   test('returns an object containing the expected error response', async () => {
     const mockTuftContext = {
